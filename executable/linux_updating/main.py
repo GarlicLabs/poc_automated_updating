@@ -1,9 +1,14 @@
 import git_clone as git_clone
-import logging as log
+from get_config import get_config
 import os
+import logging as log
+import sys
 
 def main():
     log.info("Read config")
+    config_file = sys.argv[1]
+    config = get_config(config_file)
+
     log.info("Create temp working directory")
     create_working_directory("/tmp/linux_updating/")
 

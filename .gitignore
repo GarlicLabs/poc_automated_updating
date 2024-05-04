@@ -1,2 +1,3 @@
 venv/
 executable/linux_updating/__pycache__/
+config.yml

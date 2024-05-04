@@ -1,0 +1,11 @@
+---
+
+working_directory: /tmp/linux-updating/
+terraform:
+  git_url: https://git.example.net/example/terraform.git
+  username: example
+  password: super-secret-password
+ansible:
+  git_url: https://git.example.net/example/ansible.git
+  username: example
+  password: super-secret-password
