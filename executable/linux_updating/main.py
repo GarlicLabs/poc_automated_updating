@@ -1,4 +1,4 @@
-import git_clone as git_clone
+import git_client as git
 from get_config import get_config
 import os
 import logging as log
@@ -29,7 +29,7 @@ def execute_terraform(config: dict):
         git_username=config["terraform"]["username"],
         git_password=config["terraform"]["password"]
     )
-    git_clone.clone(clone_config)
+    git.clone(clone_config)
     log.debug("Execute Terraform")
 
 def create_working_directory(dir: str):
