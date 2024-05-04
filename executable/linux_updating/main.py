@@ -21,6 +21,12 @@ def main():
     log.info("Check for open alerts")
     log.info("Upgrade!... do together")
 
+def execute_ansible(config: dict):
+    log.debug("Execute Ansible")
+    # common
+    # security
+    # loadbalancer
+
 def execute_terraform(config: dict):
     log.debug("Clone Terraform repository")
     clone_config = dict(
