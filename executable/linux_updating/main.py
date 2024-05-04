@@ -1,7 +1,9 @@
-import git_client as git
+import terraform_client as tf
 from get_config import get_config
 import os
 import logging as log
+
+log.basicConfig(level=log.DEBUG)
 
 def main():
     log.info("Read config")
@@ -11,7 +13,7 @@ def main():
     create_working_directory(config["working_directory"])
 
     log.info("Provision test enviroment")
-    execute_terraform(config)
+    create_tf_test_env(config)
 
     log.debug("Execute Ansible")
     log.info("Compare running processes prod <> test")
@@ -21,16 +23,13 @@ def main():
     log.info("Check for open alerts")
     log.info("Upgrade!... do together")
 
-def execute_terraform(config: dict):
-    log.debug("Clone Terraform repository")
-    clone_config = dict(
-        working_directory=config["working_directory"],
-        git_url=config["terraform"]["git_url"],
-        git_username=config["terraform"]["username"],
-        git_password=config["terraform"]["password"]
-    )
-    git.clone(clone_config)
+def create_tf_test_env(config: dict):
     log.debug("Execute Terraform")
+    tf.apply(config["test_env"]["terraform"]["directory"], config["test_env"]["terraform"]["options"])
+
+def destroy_tf_test_env(config: dict):
+    log.debug("Execute Terraform")
+    tf.apply(config["test_env"]["terraform"]["directory"], config["test_env"]["terraform"]["options"])
 
 def create_working_directory(dir: str):
     if not os.path.exists(dir):
