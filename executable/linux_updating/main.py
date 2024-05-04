@@ -1,5 +1,12 @@
+from get_config import get_config
+import logging as log
+import sys
+
 def main():
     log.info("Read config")
+    config_file = sys.argv[1]
+    config = get_config(config_file)
+    print(config)
     log.info("Provision test enviroment")
     log.debug("Execute Terraform")
     log.debug("Execute Ansible")
