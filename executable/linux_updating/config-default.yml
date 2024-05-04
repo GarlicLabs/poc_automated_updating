@@ -1,13 +1,23 @@
 ---
 
 working_directory: /tmp/linux-updating/
-terraform:
-  # For the poc we automaticlly add https:// to the git url, so please dont add it
-  git_url: git.example.net/example/terraform.git
-  username: example
-  password: super-secret-password
-ansible:
-  # For the poc we automaticlly add https:// to the git url, so please dont add it
-  git_url: git.example.net/example/ansible.git
-  username: example
-  password: super-secret-password
+test_env:
+  terraform:
+    directory: infrastructure
+    options: -auto-approve -var-file cf_auth.tfvars -var-file dns.tfvars -var-file do_auth.tfvars -var-file do.tfvars
+  ansible:
+    directory: infrastructure_configuration
+    git_branch: test
+    command: venv/bin/ansible-playbook --vault-password-file .ansible_vault_pw.txt -i inventory-test.yml 
+    playbooks:
+      - common.yml
+prod_env:
+  terraform:
+    directory: infrastructure
+    options: -auto-approve -var-file cf_auth.tfvars -var-file dns.tfvars -var-file do_auth.tfvars -var-file do.tfvars
+  ansible:
+    directory: infrastructure_configuration
+    git_branch: test
+    command: venv/bin/ansible-playbook --vault-password-file .ansible_vault_pw.txt -i inventory-prod.yml 
+    playbooks:
+      - common.yml
