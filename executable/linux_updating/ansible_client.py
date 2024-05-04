@@ -2,10 +2,10 @@ import git
 import subprocess
 import os
 
-def playbook(config: dict):
-    git.Repo(config["directory"]).git.checkout(config["git_branch"])
-    os.chdir(config["directory"])
-    for playbook in config["playbooks"]:
-        cmd = config["command"] + " " + playbook
-        process = subprocess.Popen(cmd, shell=True)
-        process.wait()
+def playbook(ansible_cmd: str, ansible_dir: str, branch: str, playbook: str):
+    git.Repo(ansible_dir).git.checkout(branch)
+    os.chdir(ansible_dir)
+    cmd = ansible_cmd + " " + playbook
+    print(cmd)
+    process = subprocess.Popen(cmd, shell=True)
+    process.wait()

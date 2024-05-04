@@ -28,3 +28,10 @@ def validate_stdout(processes: list, hostname: str):
     if not processes:
         log.error("No processes found on " + hostname)
         raise Exception("No processes found on " + hostname)
+
+def get_mapped_processes(servers: list) -> dict:
+    running_processes = {}
+    for server in servers:
+        processes = get_processes(server)
+        running_processes[server["tag"]] = processes
+    return running_processes
