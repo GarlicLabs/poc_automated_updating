@@ -1,6 +1,6 @@
 import terraform_client as tf
 import ansible_client as ansible
-from get_processes import get_processes
+import get_processes
 import os
 import logging as log
 
@@ -37,19 +37,12 @@ def provision_test_env(config: dict):
     ansible.playbook(config["test_env"]["ansible"])
 
 def compare_test_prod_running_processes(config: dict):
-
-    prod_process_server_dict = {}
     log.debug("Get running processes for prod")
-    for server in config["prod_env"]["servers"]:
-        processes = get_processes(server)
-        prod_process_server_dict[server["tag"]] = processes
-
-    test_process_server_dict = {}
+    prod_process_server_dict = get_processes.get_mapped_processes(config["prod_env"]["servers"])
+    
     log.debug("Get running processes for test")
-    for server in config["test_env"]["servers"]:
-        processes = get_processes(server)
-        test_process_server_dict[server["tag"]] = processes
-
+    test_process_server_dict = get_processes.get_mapped_processes(config["test_env"]["servers"])
+    
     log.debug("Compare processes")
     for server in config["prod_env"]["servers"]:
         prod = prod_process_server_dict[server["tag"]]
