@@ -16,7 +16,7 @@ def main():
 
     log.info("Provision test enviroment")
     # create_tf_test_env(config)
-    # provision_test_env(config)
+    provision_test_env(config)
 
     log.info("Compare running processes prod <> test")
     compare_test_prod_running_processes(config)

@@ -7,5 +7,5 @@ def playbook(config: dict):
     os.chdir(config["directory"])
     for playbook in config["playbooks"]:
         cmd = config["command"] + " " + playbook
-        process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+        process = subprocess.Popen(cmd, shell=True)
         process.wait()
