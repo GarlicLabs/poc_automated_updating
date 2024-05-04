@@ -1,3 +1,15 @@
+# POC automated updates
+
+## Setup
+
+1. Create venv `python3 -m venv ./venv`
+2. Install dependencies `venv/bin/pip install -r requirements.txt`
+
+## Update dependency file
+
+`venv/bin/pip3 freeze > requirements.txt`
+
+## Flow
 
 Need 3 files:
 
