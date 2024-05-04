@@ -2,15 +2,14 @@ import git_clone as git_clone
 from get_config import get_config
 import os
 import logging as log
-import sys
 
 def main():
     log.info("Read config")
-    config_file = sys.argv[1]
-    config = get_config(config_file)
+    config = get_config()
+    print(config)
 
     log.info("Create temp working directory")
-    create_working_directory("/tmp/linux_updating/")
+    create_working_directory(config["working_directory"])
 
     log.info("Provision test enviroment")
     execute_terraform(None)

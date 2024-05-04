@@ -9,6 +9,10 @@
 
 `venv/bin/pip3 freeze > requirements.txt`
 
+## Execute
+
+`venv/bin/python3 executable/linux_updating/main.py executable/linux_updating/config.yml`
+
 ## Flow
 
 Need 3 files:
