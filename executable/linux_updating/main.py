@@ -1,11 +1,11 @@
 import terraform_client as tf
 import ansible_client as ansible
-import get_processes
+from get_processes import get_processes
 from get_config import get_config
 import os
 import logging as log
 
-log.basicConfig(level=log.DEBUG)
+# log.basicConfig(level=log.INFO)
 
 def main():
     log.info("Read config")
@@ -41,8 +41,47 @@ def provision_test_env(config: dict):
     ansible.playbook(config["test_env"]["ansible"])
 
 def compare_test_prod_running_processes(config: dict):
-    for server in config["servers"]:
-        get_processes(server)
+
+    prod_process_server_dict = {}
+    log.debug("Get running processes for prod")
+    for server in config["prod_env"]["servers"]:
+        processes = get_processes(server)
+        prod_process_server_dict[server["tag"]] = processes
+
+    test_process_server_dict = {}
+    log.debug("Get running processes for test")
+    for server in config["prod_env"]["servers"]:
+        processes = get_processes(server)
+        test_process_server_dict[server["tag"]] = processes
+
+    log.debug("Compare processes")
+    for server in config["prod_env"]["servers"]:
+        prod = prod_process_server_dict[server["tag"]]
+        print("=====================================")
+        print(prod_process_server_dict[server["tag"]])
+        test = test_process_server_dict[server["tag"]]
+        print("=====================================")
+        print(test_process_server_dict[server["tag"]])
+        if test is None:
+            continue
+
+        diff = list(set(prod) - set(test))
+        print(diff)
+        if not diff:
+            print(f"Server {server['tag']} is the same")
+        
+
+    # print(type(prod_tprocess_server_dict["control-plane01"])) 
+    # print(test_process_server_dict)
+    # for server in config["test_env"]["servers"]:
+    #     prod = prod_process_server_dict[server["tag"]]
+    #     test = tes_process_server_dict[server["tag"]]
+    #     prod.sort()
+    #     test.sort()
+    #     print(prod) 
+
+    # print(test_process_server_dict)
+
 
     # get running processes
     # login to test server
@@ -54,7 +93,7 @@ def compare_test_prod_running_processes(config: dict):
     log.info("Show process diff")
 
     log.debug("Compare processes")
-    ansible.playbook(config["compare_processes"]["ansible"])
+    # ansible.playbook(config["compare_processes"]["ansible"])
 
 if __name__ == "__main__":
     main()
