@@ -1,6 +1,8 @@
-import terraform_client as tf
-import ansible_client as ansible
-import get_processes
+from shared import prepare_test_env
+from shared import terraform_client
+import logging as log
+from shared import ansible_client
+from shared import get_processes
 import os
 import logging as log
 
@@ -9,20 +11,20 @@ def prepare(config: dict):
     log.info("Provision test enviroment")
     create_tf_test_env(config)
     provision_test_env(config)
-    exit(0)
 
-    log.info("Compare running processes prod <> test")
+    log.debug("Compare running processes prod <> test")
     compare_test_prod_running_processes(config)
+    
+    log.debug("Check for open alerts")
 
-    log.info("Check for open alerts")
 
 def create_tf_test_env(config: dict):
     log.debug("Execute Terraform")
-    tf.apply(config["test_env"]["terraform"]["directory"], config["test_env"]["terraform"]["options"])
+    terraform_client.apply(config["test_env"]["terraform"]["directory"], config["test_env"]["terraform"]["options"])
 
 def destroy_tf_test_env(config: dict):
     log.debug("Execute Terraform")
-    tf.apply(config["test_env"]["terraform"]["directory"], config["test_env"]["terraform"]["options"])
+    terraform_client.apply(config["test_env"]["terraform"]["directory"], config["test_env"]["terraform"]["options"])
 
 def create_working_directory(dir: str):
     if not os.path.exists(dir):
@@ -31,7 +33,7 @@ def create_working_directory(dir: str):
 def provision_test_env(config: dict):
     log.debug("Execute Ansible")
     for playbook in config["test_env"]["ansible"]["playbooks"]:
-        ansible.playbook(
+        ansible_client.playbook(
         config["test_env"]["ansible"]["command"], 
         config["test_env"]["ansible"]["directory"], 
         config["test_env"]["ansible"]["git_branch"], 

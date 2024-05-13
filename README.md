@@ -45,4 +45,5 @@ Updating grafana
 
 -----
 
-Python Robot Framework evaluieren
+executable/linux_updating.py
+executable/k8s_updating.py
