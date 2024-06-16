@@ -3,7 +3,6 @@ from shared import get_config
 import logging as log
 from shared import ansible_client as ansible
 from shared import get_processes
-import sys
 
 log.basicConfig(level=log.INFO)
 

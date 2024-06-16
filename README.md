@@ -11,7 +11,7 @@
 
 ## Execute
 
-`venv/bin/python3 executable/linux_updating/main.py executable/linux_updating/config.yml`
+`venv/bin/python3 executable/linux_updating/main.py executable/configs/linux_config.yml`
 
 ## Flow
 
