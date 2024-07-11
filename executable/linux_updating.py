@@ -3,17 +3,27 @@ from shared import get_config
 import logging as log
 from shared import ansible_client as ansible
 from shared import get_processes
+from shared import robot_client as robot
+from shared import parse_flags
 
 log.basicConfig(level=log.INFO)
 
 def main():
     log.info("Start linux update workflow with getting config")
-    config = get_config.get_config()
-    prepare_test_env.prepare(config)
+    flags = parse_flags.get_flags()
+    config = get_config.get_config(flags.configFile)
+
+    if flags.create_test_env:
+        prepare_test_env.prepare(config)
 
     log.debug("Getting the running processes before update")
     test_pre_update_processes = get_processes.get_mapped_processes(
         config["test_env"]["servers"])
+
+    log.info("Run tests before update on test")
+    for test in config["robot_tests"]["tests"]:
+        robot.run_test(config["robot_tests"]["command"], test, 
+                       config["robot_tests"]["directory"])
 
     log.info("Update test hosts via ansible")
     ansible.playbook(
@@ -32,22 +42,33 @@ def main():
         post = test_post_update_processes[server["tag"]]
         if post is None:
             continue
-
         diff = list(set(pre) - set(post))
-        if diff != None:
+        if diff:
             print(
                 "There are differences between the hosts with the tag " + 
                 server["tag"])
 
+    log.info("Run tests after update on test")
+    for test in config["robot_tests"]["tests"]:
+        robot.run_test(config["robot_tests"]["command"], test, 
+                       config["robot_tests"]["directory"])
+
+    if flags.update_prod:
+        update_prod()
+
+    if flags.destroy_test:
+        log.info("Destroy test enviroment")
+        prepare_test_env.destroy_tf_test_env(config)
+
+def update_prod():
     log.debug("Getting the running processes before prod update")
-    prod_pre_update_processes = get_processes.get_mapped_processes(
-        config["prod_env"]["servers"])
+    prod_pre_update_processes = get_processes.get_mapped_processes(config["prod_env"]["servers"])
 
     log.info("Update prod hosts via ansible")
     ansible.playbook(
         config["prod_env"]["ansible"]["command"], 
         config["prod_env"]["ansible"]["directory"], 
-        config["prod_env"]["ansible"]["git_branch"], 
+        config["prod_env"]["ansible"]["git_branch"],
         "playbooks/linux/update.yml")
 
     log.debug("Getting the running processes after prod update")

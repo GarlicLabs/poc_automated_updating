@@ -1,11 +1,11 @@
-from paramiko import SSHClient
+from paramiko import SSHClient, AutoAddPolicy 
 import logging as log
 
 def get_processes(server: dict):
     log.info(f"Get running processes from {server['host']}")
     client = SSHClient()
     try:
-        client.load_system_host_keys()
+        client.set_missing_host_key_policy(AutoAddPolicy)
         client.connect(hostname=server["host"], port=server["port"], username=server["user"])
 
         cmd = "systemctl list-units --type=service --state=running --no-legend | awk '{print $1}'"
