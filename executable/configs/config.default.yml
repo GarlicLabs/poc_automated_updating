@@ -1,0 +1,39 @@
+---
+working_directory: /tmp/linux-updating/
+test_env:
+  terraform:
+    directory: terraform
+    options: -auto-approve
+  ansible:
+    directory: ansible
+    git_branch: main
+    command: ansible-playbook -i inventory.yml
+    playbooks:
+      - main.yml
+  servers:
+    - host: example-test.com
+      port: 22
+      user: admin
+      tag: control-plane
+      keyfile: .ssh/id_ed25519.pub
+prod_env:
+  terraform:
+    directory: infrastructure
+    options: -auto-approve
+  ansible:
+    directory: infrastructure_configuration
+    git_branch: main
+    command: ansible-playbook -i inventory.yml
+    playbooks:
+      - main.yml
+    servers:
+      - host: example-test.com
+        port: 22
+        user: admin
+        tag: control-plane
+        keyfile: .ssh/id_ed25519.pub
+robot_tests:
+  command: robot
+  directory: ~/poc_infrastructure_testing
+  tests:
+    - node_exporter/node_exporter.robot
