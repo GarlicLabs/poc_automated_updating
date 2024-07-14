@@ -25,7 +25,7 @@ def main():
     ansible.playbook(
         config["test_env"]["ansible"]["command"],
         config["test_env"]["ansible"]["directory"],
-        config["test_env"]["ansible"]["git_branch"],
+        "feature/grafana-update",
         "playbooks/k8s/SaaS/grafana.yml")
 
     log.info("Run tests after update on test")
