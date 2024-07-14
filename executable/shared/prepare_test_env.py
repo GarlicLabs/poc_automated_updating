@@ -11,10 +11,8 @@ def prepare(config: dict):
     log.info("Provision test enviroment")
     create_tf_test_env(config)
     provision_test_env(config)
-
     log.debug("Compare running processes prod <> test")
     compare_test_prod_running_processes(config)
-    
     log.debug("Check for open alerts")
 
 
@@ -34,18 +32,18 @@ def provision_test_env(config: dict):
     log.debug("Execute Ansible")
     for playbook in config["test_env"]["ansible"]["playbooks"]:
         ansible_client.playbook(
-        config["test_env"]["ansible"]["command"], 
-        config["test_env"]["ansible"]["directory"], 
-        config["test_env"]["ansible"]["git_branch"], 
+        config["test_env"]["ansible"]["command"],
+        config["test_env"]["ansible"]["directory"],
+        config["test_env"]["ansible"]["git_branch"],
         playbook)
 
 def compare_test_prod_running_processes(config: dict):
     log.debug("Get running processes for prod")
     prod_process_server_dict = get_processes.get_mapped_processes(config["prod_env"]["servers"])
-    
+
     log.debug("Get running processes for test")
     test_process_server_dict = get_processes.get_mapped_processes(config["test_env"]["servers"])
-    
+
     log.debug("Compare processes")
     for server in config["prod_env"]["servers"]:
         prod = prod_process_server_dict[server["tag"]]
@@ -56,7 +54,7 @@ def compare_test_prod_running_processes(config: dict):
         diff = list(set(prod) - set(test))
         if diff != None:
             print(
-                "There are differences between the hosts with the tag " + 
+                "There are differences between the hosts with the tag " +
                 server["tag"])
             print(diff)
             decision = input("Are these differences acceptable? (y/N): ")
@@ -64,5 +62,3 @@ def compare_test_prod_running_processes(config: dict):
                 pass
             else:
                 raise Exception("Different Processes are not acceptable.")
-
-
