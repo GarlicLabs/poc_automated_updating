@@ -1,5 +1,6 @@
-from paramiko import SSHClient, AutoAddPolicy 
+from paramiko import SSHClient, AutoAddPolicy
 import logging as log
+log.getLogger("paramiko").setLevel(log.WARNING)
 
 def get_processes(server: dict):
     log.info(f"Get running processes from {server['host']}")
@@ -10,7 +11,7 @@ def get_processes(server: dict):
 
         cmd = "systemctl list-units --type=service --state=running --no-legend | awk '{print $1}'"
         stdin, stdout, stderr = client.exec_command(cmd)
-        
+
         validate_stderr(stderr, server["host"])
         processes = stdout.read().decode().strip().split('\n')
         validate_stdout(processes, server["host"])
