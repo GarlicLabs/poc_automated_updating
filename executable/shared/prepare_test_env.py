@@ -24,7 +24,7 @@ def create_tf_test_env(config: dict):
 
 def destroy_tf_test_env(config: dict):
     log.debug("Execute Terraform")
-    terraform_client.apply(config["test_env"]["terraform"]["directory"], config["test_env"]["terraform"]["options"])
+    terraform_client.destroy(config["test_env"]["terraform"]["directory"], config["test_env"]["terraform"]["options"])
 
 def create_working_directory(dir: str):
     if not os.path.exists(dir):
