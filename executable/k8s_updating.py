@@ -2,7 +2,7 @@ import logging as log
 from shared import get_config
 from shared import prepare_test_env
 from shared import ansible_client as ansible
-from shared import robot_client as robot
+from executable.shared import test_client as robot
 from shared import parse_flags
 
 log.basicConfig(level=log.INFO)
@@ -33,7 +33,6 @@ def main():
     for test in config["robot_tests"]["tests"]:
         robot.run_test(config["robot_tests"]["command"], test,
                        config["robot_tests"]["directory"])
-        # TODO also run grafana tests
     log.info("All tests passed")
 
     if flags.update_prod:
@@ -49,7 +48,6 @@ def main():
         for test in config["robot_tests"]["tests"]:
             robot.run_test(config["robot_tests"]["command"], test,
                         config["robot_tests"]["directory"])
-        #TODO also run grafana tests
     log.info("All tests passed")
 
     if flags.destroy_test:

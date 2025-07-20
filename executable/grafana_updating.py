@@ -3,7 +3,7 @@ from shared import get_config
 import logging as log
 from shared import ansible_client as ansible
 from shared import get_processes
-from shared import robot_client as robot
+from shared import test_client as testing
 from shared import parse_flags
 
 log.basicConfig(level=log.INFO)
@@ -55,9 +55,9 @@ def update_prod(config):
         "playbooks/k8s/SaaS/grafana.yml")
 
     log.info("Run tests after updating grafana on prod")
-    for test in config["robot_tests"]["tests"]:
-        robot.run_test(config["robot_tests"]["command"], test,
-                       config["robot_tests"]["directory"])
+    for test in config["testing"]["tests"]:
+        testing.run_test(config["testing"]["command"], test,
+                       config["testing"]["directory"])
 
 if __name__ == "__main__":
     main()

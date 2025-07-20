@@ -3,7 +3,7 @@ from shared import get_config
 import logging as log
 from shared import ansible_client as ansible
 from shared import get_processes
-from shared import robot_client as robot
+from executable.shared import test_client as testing
 from shared import parse_flags
 
 log.basicConfig(level=log.INFO)
@@ -22,7 +22,7 @@ def main():
 
     log.info("Run tests before update on test")
     for test in config["robot_tests"]["tests"]:
-        robot.run_test(config["robot_tests"]["command"], test,
+        testing.run_test(config["robot_tests"]["command"], test,
                        config["robot_tests"]["directory"])
 
     log.info("Update test hosts via ansible")
@@ -50,7 +50,7 @@ def main():
 
     log.info("Run tests after update on test")
     for test in config["robot_tests"]["tests"]:
-        robot.run_test(config["robot_tests"]["command"], test,
+        testing.run_test(config["robot_tests"]["command"], test,
                        config["robot_tests"]["directory"])
 
     if flags.update_prod:

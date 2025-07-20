@@ -32,8 +32,8 @@ prod_env:
         user: admin
         tag: control-plane
         keyfile: .ssh/id_ed25519.pub
-robot_tests:
-  command: robot
+testing:
+  command: k6
   directory: ~/poc_infrastructure_testing
   tests:
-    - node_exporter/node_exporter.robot
+    - test.js
