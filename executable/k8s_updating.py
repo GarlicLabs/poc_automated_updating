@@ -27,7 +27,7 @@ def main():
         config["test_env"]["ansible"]["command"],
         config["test_env"]["ansible"]["directory"],
         config["test_env"]["ansible"]["git_branch"],
-        "playbooks/k8s/k8s_upgrade.yml")
+        "-e vars/test/k8s.yml playbooks/k8s/k8s_upgrade.yml --become --become-user=root")
 
     log.info("Run tests again after update on test")
     for test in config["robot_tests"]["tests"]:
@@ -36,13 +36,17 @@ def main():
     log.info("All tests passed")
 
     if flags.update_prod:
-    #TODO run tests before
+        log.info("Run tests again before update on prod")
+        for test in config["robot_tests"]["tests"]:
+            robot.run_test(config["robot_tests"]["command"], test,
+                           config["robot_tests"]["directory"])
+        log.info("All tests passed")
         log.info("Update prod hosts via ansible")
         ansible.playbook(
             config["prod_env"]["ansible"]["command"],
             config["prod_env"]["ansible"]["directory"],
             config["prod_env"]["ansible"]["git_branch"],
-            "playbooks/k8s/k8s_upgrade.yml")
+            "-e vars/test/k8s.yml playbooks/k8s/k8s_upgrade.yml --become --become-user=root")
 
         log.info("Run tests again after update on prod")
         for test in config["robot_tests"]["tests"]:
